@@ -14,7 +14,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/,   // process both .js and .jsx
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -31,11 +31,10 @@ module.exports = {
     }),
   ],
   devServer: {
-  historyApiFallback: true,
-  port: 3000,
-  proxy: {
-    '/api': 'http://localhost:8080'
-
+    historyApiFallback: true,
+    port: 3000,
+    proxy: {
+      '/api': 'http://localhost:8080'   // 👈 This is the 3rd point (proxy)
+    }
   },
-}
-}
+};
