@@ -1,0 +1,66 @@
+.booking-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.doctor-list, .calendar, .booking-form {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.doctor-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  background: white;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.doctor-avatar {
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.booking-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-form label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.booking-form input, .booking-form select {
+  padding: 6px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel-btn {
+  background: #ccc;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.submit-btn {
+  background: teal;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
