@@ -50,14 +50,14 @@ public class BookingController {
     }
 
     @GetMapping("/doctors/{id}/slots")
-public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
-    System.out.println("Fetching slots for doctor ID: " + doctorId);
-    List<Map<String, Object>> doctorSlots = slots.get(doctorId);
-    if (doctorSlots == null) {
-        System.out.println("No slots found for doctor ID: " + doctorId);
-        return new ArrayList<>();
-    }
-    return doctorSlots;
+    public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
+        System.out.println("Fetching slots for doctor ID: " + doctorId);
+        List<Map<String, Object>> doctorSlots = slots.get(doctorId);
+        if (doctorSlots == null) {
+            System.out.println("No slots found for doctor ID: " + doctorId);
+            return new ArrayList<>();
+        }
+        return doctorSlots;
     }
 
     @PostMapping("/bookings")
