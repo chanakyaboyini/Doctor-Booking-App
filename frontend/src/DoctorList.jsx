@@ -61,16 +61,22 @@ function DoctorList() {
       {loading && <p>Loading slots...</p>}
 
       {slots.length > 0 && (
-        <div>
-          <h3>Available Slots</h3>
-          {slots.map(s => (
-            <div key={s.slotId}>
-              <span>{s.time}</span>
-              {s.available && <button onClick={() => bookSlot(s.slotId)}>Book</button>}
-            </div>
-          ))}
-        </div>
-      )}
+  <div>
+    <h3>Available Slots</h3>
+    {slots.map(s => (
+      <div key={s.id}>
+        <span>
+          {new Date(s.startTime).toLocaleString()} ({s.durationMinutes} mins)
+        </span>
+        {!s.booked && (
+          <button onClick={() => bookSlot(s.id)}>Book</button>
+        )}
+        {s.booked && <span> - Already Booked</span>}
+      </div>
+    ))}
+  </div>
+)}
+
 
       {slots.length === 0 && selectedDoctor && !loading && (
         <p>No slots available for this doctor.</p>
