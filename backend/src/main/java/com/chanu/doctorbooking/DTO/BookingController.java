@@ -60,16 +60,30 @@ public class BookingController {
     }
 
     @GetMapping("/doctors/{id}/slots")
-    public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
-        System.out.println("Fetching slots for doctor ID: " + doctorId);
-        List<Map<String, Object>> doctorSlots = slots.get(doctorId);
-        if (doctorSlots == null) {
-            System.out.println("No slots found for doctor ID: " + doctorId);
-            return new ArrayList<>();
-        }
-        return doctorSlots;
+public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
+    System.out.println("Fetching slots for doctor ID: " + doctorId);
+    List<Map<String, Object>> doctorSlots = slots.get(doctorId);
+    if (doctorSlots == null) {
+        return new ArrayList<>();
     }
 
+    // ✅ Normalize to slotId/time/available
+    List<Map<String, Object>> normalized = new ArrayList<>();
+    for (Map<String, Object> s : doctorSlots) {
+        Map<String, Object> slot = new HashMap<>();
+        // If it's the new format
+        if (s.containsKey("id")) {
+            slot.put("slotId", s.get("id"));
+            slot.put("time", s.get("startTime"));
+            slot.put("available", !(Boolean) s.get("booked"));
+        } else {
+            // Already in old format
+            slot.putAll(s);
+        }
+        normalized.add(slot);
+    }
+    return normalized;
+}
     @PostMapping("/bookings")
     public Map<String, Object> createBooking(@RequestBody Map<String, Object> booking) {
         String bookingId = UUID.randomUUID().toString();
