@@ -30,42 +30,48 @@ public class BookingController {
         d2.put("fee", 400);
         doctors.add(d2);
 
-        // Seed slots
+        // Seed slots for doctor 1
         slots.put(1, Arrays.asList(
-                Map.of("slotId", 1, "time", "2025-09-26T10:00", "available", true),
-                Map.of("slotId", 2, "time", "2025-09-26T11:00", "available", true)
+            Map.of("slotId", 1, "time", "2025-09-26T10:00", "available", true),
+            Map.of("slotId", 2, "time", "2025-09-26T11:00", "available", true)
         ));
+
+        // Seed slots for doctor 2
         slots.put(2, Arrays.asList(
-                Map.of("slotId", 3, "time", "2025-09-26T12:00", "available", true),
-                Map.of("slotId", 4, "time", "2025-09-26T13:00", "available", true)
+            Map.of("slotId", 3, "time", "2025-09-26T12:00", "available", true),
+            Map.of("slotId", 4, "time", "2025-09-26T13:00", "available", true)
         ));
     }
 
     @GetMapping("/doctors")
     public List<Map<String, Object>> getDoctors() {
+        System.out.println("Returning list of doctors");
         return doctors;
     }
 
     @GetMapping("/doctors/{id}/slots")
-public List<Map<String, Object>> getSlots(@PathVariable int id) {
-    System.out.println("Fetching slots for doctor ID: " + id);
-    List<Map<String, Object>> doctorSlots = slots.get(id);
-    if (doctorSlots == null) {
-        System.out.println("No slots found for doctor ID: " + id);
-        return new ArrayList<>(); // ✅ Return empty list instead of null
+    public List<Map<String, Object>> getSlots(@PathVariable int id) {
+        System.out.println("Fetching slots for doctor ID: " + id);
+        List<Map<String, Object>> doctorSlots = slots.get(id);
+        if (doctorSlots == null) {
+            System.out.println("No slots found for doctor ID: " + id);
+            return new ArrayList<>();
+        }
+        return doctorSlots;
     }
-    return doctorSlots;
-}
 
     @PostMapping("/bookings")
     public Map<String, Object> createBooking(@RequestBody Map<String, Object> booking) {
-        booking.put("bookingId", UUID.randomUUID().toString());
+        String bookingId = UUID.randomUUID().toString();
+        booking.put("bookingId", bookingId);
         bookings.add(booking);
+        System.out.println("Booking created: " + bookingId);
         return booking;
     }
 
     @GetMapping("/bookings")
     public List<Map<String, Object>> getBookings(@RequestParam String email) {
+        System.out.println("Fetching bookings for email: " + email);
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map<String, Object> b : bookings) {
             if (email.equals(b.get("email"))) {
