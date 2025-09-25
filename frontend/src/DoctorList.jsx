@@ -33,20 +33,20 @@ function DoctorList() {
   };
 
   const bookSlot = (slotId) => {
-    axios.post("/api/bookings", {
-      doctorId: selectedDoctor,
-      slotId,
-      patientName: "Chanu",
-      email: "chanu@example.com"
+  axios.post("/api/bookings", {
+    doctorId: selectedDoctor,
+    slotId,
+    patientName: "Chanu",
+    email: "chanu@example.com"
+  })
+    .then(res => {
+      alert("Booking Confirmed! ID: " + res.data.bookingId);
     })
-      .then(res => {
-        alert("Booking Confirmed! ID: " + res.data.bookingId);
-      })
-      .catch(err => {
-        console.error("Error booking slot:", err);
-        alert("Booking failed");
-      });
-  };
+    .catch(err => {
+      console.error("Error booking slot:", err);
+      alert("Booking failed");
+    });
+};
 
   return (
     <div>
