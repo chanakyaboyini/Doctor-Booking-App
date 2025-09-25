@@ -58,7 +58,7 @@ public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
         return new ArrayList<>();
     }
     return doctorSlots;
-}
+    }
 
     @PostMapping("/bookings")
     public Map<String, Object> createBooking(@RequestBody Map<String, Object> booking) {
