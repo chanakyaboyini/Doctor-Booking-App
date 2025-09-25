@@ -22,6 +22,10 @@ module.exports = {
             presets: ['@babel/preset-env', '@babel/preset-react']
           }
         }
+      },
+      {
+        test: /\.css$/i,              // ✅ CSS loader rule
+        use: ["style-loader", "css-loader"],
       }
     ]
   },
@@ -34,7 +38,7 @@ module.exports = {
     historyApiFallback: true,
     port: 3000,
     proxy: {
-      '/api': 'http://localhost:8080'   // 👈 This is the 3rd point (proxy)
+      '/api': 'http://localhost:8080'   // ✅ backend proxy
     }
   },
 };
