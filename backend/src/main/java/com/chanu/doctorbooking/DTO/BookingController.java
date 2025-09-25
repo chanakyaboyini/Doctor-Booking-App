@@ -50,7 +50,7 @@ public class BookingController {
     }
 
     @GetMapping("/doctors/{id}/slots")
-    public List<Map<String, Object>> getSlots(@PathVariable int id) {
+public List<Map<String, Object>> getSlots(@PathVariable(name = "id") int id) {
         System.out.println("Fetching slots for doctor ID: " + id);
         List<Map<String, Object>> doctorSlots = slots.get(id);
         if (doctorSlots == null) {
