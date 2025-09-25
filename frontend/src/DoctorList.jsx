@@ -73,7 +73,8 @@ function DoctorList() {
     )}
   </div>
 ))}
-
+  </div>
+)}
 
 
       {slots.length === 0 && selectedDoctor && !loading && (
