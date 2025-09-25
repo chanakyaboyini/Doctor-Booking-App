@@ -16,38 +16,51 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/bookings")
 public class BookingController {
-  private final BookingRepository bookingRepo;
-  private final SlotRepository slotRepo;
 
-  public BookingController(BookingRepository bookingRepo, SlotRepository slotRepo) {
-    this.bookingRepo = bookingRepo;
-    this.slotRepo = slotRepo;
-  }
+    private final BookingRepository bookingRepo;
+    private final SlotRepository slotRepo;
 
-  @PostMapping
-  @Transactional
-  public ResponseEntity<?> create(@RequestBody CreateBookingRequest req) {
-    Slot slot = slotRepo.findById(req.slotId).orElse(null);
-    if (slot == null || slot.isBooked()) {
-      return ResponseEntity.badRequest().body("Slot not available");
+    public BookingController(BookingRepository bookingRepo, SlotRepository slotRepo) {
+        this.bookingRepo = bookingRepo;
+        this.slotRepo = slotRepo;
     }
 
-    Booking booking = new Booking();
-    booking.setSlot(slot);
-    booking.setPatientName(req.patientName);
-    booking.setPatientEmail(req.patientEmail);
-    booking.setPatientPhone(req.patientPhone);
-    booking.setCreatedAt(LocalDateTime.now());
+    @PostMapping
+    @Transactional
+    public ResponseEntity<Booking> create(@RequestBody CreateBookingRequest req) {
+        // Basic validation
+        if (req.patientName == null || req.patientName.isBlank()
+                || req.patientEmail == null || req.patientEmail.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-    slot.setBooked(true);
-    slotRepo.save(slot);
-    bookingRepo.save(booking);
+        Slot slot = slotRepo.findById(req.slotId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid slot ID"));
 
-    return ResponseEntity.ok(booking);
-  }
+        if (slot.isBooked()) {
+            return ResponseEntity.badRequest().build();
+        }
 
-  @GetMapping
-  public List<Booking> byEmail(@RequestParam String email) {
-    return bookingRepo.findByPatientEmailOrderByCreatedAtDesc(email);
-  }
+        Booking booking = new Booking();
+        booking.setSlot(slot);
+        booking.setPatientName(req.patientName);
+        booking.setPatientEmail(req.patientEmail);
+        booking.setPatientPhone(req.patientPhone);
+        booking.setCreatedAt(LocalDateTime.now());
+
+        slot.setBooked(true);
+        slotRepo.save(slot);
+        bookingRepo.save(booking);
+
+        return ResponseEntity.ok(booking);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Booking>> byEmail(@RequestParam String email) {
+        if (email == null || email.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<Booking> bookings = bookingRepo.findByPatientEmailOrderByCreatedAtDesc(email);
+        return ResponseEntity.ok(bookings);
+    }
 }
