@@ -17,8 +17,6 @@ function DoctorList() {
 
   const viewSlots = (doctorId) => {
     console.log("Fetching slots for doctor:", doctorId); // 👈 Debug log
-
-    setSelectedDoctor(doctorId);
     axios.get(`/api/doctors/${doctorId}/slots`)
       .then(res => {
         console.log("Slots received:", res.data); // 👈 Debug log
