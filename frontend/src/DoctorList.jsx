@@ -5,6 +5,7 @@ function DoctorList() {
   const [doctors, setDoctors] = useState([]);
   const [slots, setSlots] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     axios.get("/api/doctors")
@@ -16,16 +17,19 @@ function DoctorList() {
   }, []);
 
   const viewSlots = (doctorId) => {
-    console.log("Fetching slots for doctor:", doctorId); // 👈 Debug log
+    console.log("Fetching slots for doctor:", doctorId);
+    setLoading(true);
+    setSelectedDoctor(doctorId);
     axios.get(`/api/doctors/${doctorId}/slots`)
       .then(res => {
-        console.log("Slots received:", res.data); // 👈 Debug log
+        console.log("Slots received:", res.data);
         setSlots(res.data);
       })
       .catch(err => {
-        console.error("Error fetching slots:", err); // 👈 Error log
+        console.error("Error fetching slots:", err);
         alert("Failed to load slots");
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   const bookSlot = (slotId) => {
@@ -54,6 +58,8 @@ function DoctorList() {
         </div>
       ))}
 
+      {loading && <p>Loading slots...</p>}
+
       {slots.length > 0 && (
         <div>
           <h3>Available Slots</h3>
@@ -65,6 +71,13 @@ function DoctorList() {
           ))}
         </div>
       )}
+
+      {slots.length === 0 && selectedDoctor && !loading && (
+        <p>No slots available for this doctor.</p>
+      )}
+
+      {/* Debug preview */}
+      <pre>{JSON.stringify(slots, null, 2)}</pre>
     </div>
   );
 }
