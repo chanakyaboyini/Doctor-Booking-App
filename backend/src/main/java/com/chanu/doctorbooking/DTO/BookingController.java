@@ -41,6 +41,16 @@ public class BookingController {
             Map.of("slotId", 3, "time", "2025-09-26T12:00", "available", true),
             Map.of("slotId", 4, "time", "2025-09-26T13:00", "available", true)
         ));
+
+        // ✅ Add new slot to doctor 1
+        List<Map<String, Object>> doctor1Slots = new ArrayList<>(slots.get(1));
+        doctor1Slots.add(Map.of(
+            "id", 200,
+            "startTime", "2025-09-25T17:43:56.063+00:00",
+            "durationMinutes", 30,
+            "booked", false
+        ));
+        slots.put(1, doctor1Slots);
     }
 
     @GetMapping("/doctors")
