@@ -1,33 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { api } from './api';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function MyBookings() {
-  const { state } = useLocation();
-  const [email, setEmail] = useState(state?.email || '');
+function MyBookings() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    if (!email) return;
-    api.get(`/bookings`, { params: { email } }).then(res => setBookings(res.data));
-  }, [email]);
+    axios.get("/api/bookings", { params: { email: "chanu@example.com" } })
+      .then(res => setBookings(res.data));
+  }, []);
 
   return (
     <div>
-      <h3>My Bookings</h3>
-      <input placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
-      <button onClick={() => {
-        if (email) api.get(`/bookings`, { params: { email } }).then(res => setBookings(res.data));
-      }} style={{ marginLeft: 8 }}>
-        Refresh
-      </button>
-      <ul style={{ marginTop: 12 }}>
-        {bookings.map(b => (
-          <li key={b.id}>
-            {new Date(b.slot.startTime).toLocaleString()} with {b.slot.doctor.name}
-          </li>
-        ))}
-      </ul>
+      <h2>My Bookings</h2>
+      {bookings.map(b => (
+        <div key={b.bookingId}>
+          <p>Doctor ID: {b.doctorId} | Slot: {b.slotId} | Booking ID: {b.bookingId}</p>
+        </div>
+      ))}
     </div>
   );
 }
+
+export default MyBookings;
