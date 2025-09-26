@@ -33,27 +33,26 @@ function DoctorList() {
   };
 
   const bookSlot = (slotId) => {
-    axios.post("/api/bookings", {
-      doctorId: selectedDoctor,
-      slotId,
-      patientName: "Chanu",
-      email: "chanu@example.com"
+  axios.post("/api/bookings", {
+    doctorId: selectedDoctor,
+    slotId,
+    patientName: "Chanu",
+    email: "chanu@example.com"
+  })
+    .then(res => {
+      alert("Booking Confirmed! ID: " + res.data.bookingId);
     })
-      .then(res => {
-        alert("Booking Confirmed! ID: " + res.data.bookingId);
-        console.log("Booking response:", res.data);
-      })
-      .catch(err => {
-        console.error("Error booking slot:", err);
-        alert("Booking failed");
-      });
-  };
+    .catch(err => {
+      console.error("Error booking slot:", err);
+      alert("Booking failed");
+    });
+};
 
   return (
     <div>
       <h2>Doctors</h2>
       {doctors.map(d => (
-        <div key={d.id} style={{ marginBottom: "12px" }}>
+        <div key={d.id}>
           <p>{d.name} - {d.specialization} (₹{d.fee})</p>
           <button onClick={() => viewSlots(d.id)}>View Slots</button>
         </div>
@@ -62,20 +61,21 @@ function DoctorList() {
       {loading && <p>Loading slots...</p>}
 
       {slots.length > 0 && (
-        <div>
-          <h3>Available Slots</h3>
-          {slots.map(s => (
-            <div key={s.slotId} style={{ marginBottom: "8px" }}>
-              <span>{new Date(s.time).toLocaleString()}</span>
-              {s.available && (
-                <button onClick={() => bookSlot(s.slotId)} style={{ marginLeft: "8px" }}>
-                  Book
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+  <div>
+    <h3>Available Slots</h3>
+    {slots.map(s => (
+  <div key={s.slotId || s.id}>
+    <span>
+      {s.time || new Date(s.startTime).toLocaleString()}
+    </span>
+    {(s.available !== undefined ? s.available : !s.booked) && (
+      <button onClick={() => bookSlot(s.slotId || s.id)}>Book</button>
+    )}
+  </div>
+))}
+  </div>
+)}
+
 
       {slots.length === 0 && selectedDoctor && !loading && (
         <p>No slots available for this doctor.</p>
