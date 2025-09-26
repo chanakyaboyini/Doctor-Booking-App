@@ -64,12 +64,12 @@ function DoctorList() {
   <div>
     <h3>Available Slots</h3>
     {slots.map(s => (
-  <div key={s.slotId || s.id}>
-    <span>
-      {s.time || new Date(s.startTime).toLocaleString()}
-    </span>
-    {(s.available !== undefined ? s.available : !s.booked) && (
-      <button onClick={() => bookSlot(s.slotId || s.id)}>Book</button>
+  <div key={s.slotId} style={{ marginBottom: "8px" }}>
+    <span>{new Date(s.time).toLocaleString()}</span>
+    {s.available && (
+      <button onClick={() => bookSlot(s.slotId)} style={{ marginLeft: "8px" }}>
+        Book
+      </button>
     )}
   </div>
 ))}
