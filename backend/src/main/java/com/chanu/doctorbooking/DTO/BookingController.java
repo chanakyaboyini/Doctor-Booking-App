@@ -31,26 +31,17 @@ public class BookingController {
         doctors.add(d2);
 
         // Seed slots for doctor 1
-        slots.put(1, Arrays.asList(
-            Map.of("slotId", 1, "time", "2025-09-26T10:00", "available", true),
-            Map.of("slotId", 2, "time", "2025-09-26T11:00", "available", true)
-        ));
+        List<Map<String, Object>> doctor1Slots = new ArrayList<>();
+        doctor1Slots.add(Map.of("slotId", 1, "time", "2025-09-26T10:00", "available", true));
+        doctor1Slots.add(Map.of("slotId", 2, "time", "2025-09-26T11:00", "available", true));
+        doctor1Slots.add(Map.of("id", 200, "startTime", "2025-09-25T17:43:56.063+00:00", "durationMinutes", 30, "booked", false));
+        slots.put(1, doctor1Slots);
 
         // Seed slots for doctor 2
-        slots.put(2, Arrays.asList(
-            Map.of("slotId", 3, "time", "2025-09-26T12:00", "available", true),
-            Map.of("slotId", 4, "time", "2025-09-26T13:00", "available", true)
-        ));
-
-        // ✅ Add new slot to doctor 1
-        List<Map<String, Object>> doctor1Slots = new ArrayList<>(slots.get(1));
-        doctor1Slots.add(Map.of(
-            "id", 200,
-            "startTime", "2025-09-25T17:43:56.063+00:00",
-            "durationMinutes", 30,
-            "booked", false
-        ));
-        slots.put(1, doctor1Slots);
+        List<Map<String, Object>> doctor2Slots = new ArrayList<>();
+        doctor2Slots.add(Map.of("slotId", 3, "time", "2025-09-26T12:00", "available", true));
+        doctor2Slots.add(Map.of("slotId", 4, "time", "2025-09-26T13:00", "available", true));
+        slots.put(2, doctor2Slots);
     }
 
     @GetMapping("/doctors")
@@ -60,30 +51,29 @@ public class BookingController {
     }
 
     @GetMapping("/doctors/{id}/slots")
-public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
-    System.out.println("Fetching slots for doctor ID: " + doctorId);
-    List<Map<String, Object>> doctorSlots = slots.get(doctorId);
-    if (doctorSlots == null) {
-        return new ArrayList<>();
+    public List<Map<String, Object>> getSlots(@PathVariable("id") int doctorId) {
+        System.out.println("Fetching slots for doctor ID: " + doctorId);
+        List<Map<String, Object>> doctorSlots = slots.get(doctorId);
+        if (doctorSlots == null) {
+            return new ArrayList<>();
+        }
+
+        // Normalize to slotId/time/available
+        List<Map<String, Object>> normalized = new ArrayList<>();
+        for (Map<String, Object> s : doctorSlots) {
+            Map<String, Object> slot = new HashMap<>();
+            if (s.containsKey("id")) {
+                slot.put("slotId", s.get("id"));
+                slot.put("time", s.get("startTime"));
+                slot.put("available", !(Boolean) s.get("booked"));
+            } else {
+                slot.putAll(s);
+            }
+            normalized.add(slot);
+        }
+        return normalized;
     }
 
-    // ✅ Normalize to slotId/time/available
-    List<Map<String, Object>> normalized = new ArrayList<>();
-    for (Map<String, Object> s : doctorSlots) {
-        Map<String, Object> slot = new HashMap<>();
-        // If it's the new format
-        if (s.containsKey("id")) {
-            slot.put("slotId", s.get("id"));
-            slot.put("time", s.get("startTime"));
-            slot.put("available", !(Boolean) s.get("booked"));
-        } else {
-            // Already in old format
-            slot.putAll(s);
-        }
-        normalized.add(slot);
-    }
-    return normalized;
-}
     @PostMapping("/bookings")
     public Map<String, Object> createBooking(@RequestBody Map<String, Object> booking) {
         String bookingId = UUID.randomUUID().toString();
