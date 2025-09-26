@@ -81,8 +81,7 @@ function DoctorList() {
         <p>No slots available for this doctor.</p>
       )}
 
-      {/* Debug preview */}
-      <pre>{JSON.stringify(slots, null, 2)}</pre>
+      
     </div>
   );
 }
