@@ -1,4 +1,4 @@
-package com.doctorbooking.demo.controller;
+package com.chanu.doctorbooking.controller;
 
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
