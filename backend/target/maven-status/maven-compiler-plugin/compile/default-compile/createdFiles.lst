@@ -1,4 +1,4 @@
+com\chanu\doctorbooking\controller\BookingController.class
 com\chanu\doctorbooking\controller\DoctorController.class
-com\doctorbooking\demo\controller\BookingController.class
 com\chanu\doctorbooking\DoctorBookingApplication.class
 com\chanu\doctorbooking\dto\CreateBookingRequest.class
