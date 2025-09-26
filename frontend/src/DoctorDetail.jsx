@@ -17,11 +17,16 @@ export default function DoctorDetail() {
       <h3>Available slots</h3>
       <ul>
         {slots.map(s => (
-          <li key={s.id} style={{ marginBottom: 8 }}>
-            {new Date(s.startTime).toLocaleString()} ({s.durationMinutes} min)
-            <button onClick={() => setSelected(s)} style={{ marginLeft: 8 }}>
-              Book
-            </button>
+          <li key={s.slotId} style={{ marginBottom: 8 }}>
+            {new Date(s.time).toLocaleString()}
+            <span style={{ marginLeft: 8 }}>
+              {s.available ? '✅ Available' : '❌ Booked'}
+            </span>
+            {s.available && (
+              <button onClick={() => setSelected(s)} style={{ marginLeft: 8 }}>
+                Book
+              </button>
+            )}
           </li>
         ))}
       </ul>
